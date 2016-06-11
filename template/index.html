@@ -1,0 +1,42 @@
+<html>
+<head>
+    <title>AndreWRX Python Obfuscator</title>
+    <script type='text/javascript' src='https://cdn.firebase.com/v0/firebase.js'></script>
+    <script type='text/javascript' src='http://code.jquery.com/jquery-1.11.0.min.js'></script>
+</head>
+<body>
+    <h1>AndreWRX Python Obfuscator</h1>
+    <p>
+        Paste some python code (currently Python 2.x only) below, then hit "Obfuscate!" <br />
+        If your code is too large it will timeout (a constraint on Heroku). <br />
+        If that is the case you can try to use the <a href="https://github.com/andrewrx83/python" target="_blank">source code</a> and run it locally.<br />
+        <form method="post" action="/">
+            <textarea id="src" name="original" rows="10" cols="80">{{ original }}</textarea><br />
+            <input id="submitCode" type="submit" value="Obfuscate!" /><input type="reset" value="clear"><br />
+            <textarea rows="10" cols="80">{{ obfuscated }}</textarea>
+        </form>
+    </p>
+    {% if obfuscated != "" %}
+    <p>Compression Ratio: {{ str(obfLen)  + " / " + str(originalLen) + " = " + str(float(obfLen) / float(originalLen)) }}</p>
+    <p><a href="http://ideone.com" target="_blank">Run the code on ideone.com!</a></p>
+    <p>Check out and fork the code at <a href="https://github.com/andrewrx83/python" target="_blank">GitHub</a>!</p>
+    <p>If your code will not run after obfuscating, please help me improve by <a href="https://github.com/lhr0909/PythonObfuscator/issues" target="_blank">submitting that original script onto my GitHub issue tracker</a>. All the help is appreciated.</p>
+    {% end %}
+    <p>Version: v0.3</p>
+    <p>Author: Simon Liang</p>
+    <script type="text/javascript" src="http://l2.io/ip.js?var=myip"></script>
+    <script>
+        $(document).ready(function(){
+            window.data = new Firebase("https://pyobf.firebaseio.com/src");
+            $("#submitCode").click(function(){
+                window.data.push({
+                    timestamp: new Date().getTime(),
+                    ip: myip,
+                    referrer: document.referrer,
+                    src: $("#src").val()
+                });
+            });
+        });
+    </script>
+</body>
+</html>
